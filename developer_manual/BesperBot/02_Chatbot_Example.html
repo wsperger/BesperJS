@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Azure Bot Chat</title>
+    <style>
+        /* Main wrapper for the chat component */
+        #besperChatWrapper {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 2147483647;
+        }
+        /* Chat bubble (button) styles */
+        #besperChatBubble {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 60px;
+            height: 60px;
+            background-color: #022D54;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            color: #FFFFFF;
+            font-family: sans-serif;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        #besperChatBubble:hover {
+            background-color: #5897DE;
+        }
+        /* Chat container styles */
+        #besperChatContainer {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 455px;
+            height: 500px;
+            background-color: #FFFFFF;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            overflow: hidden;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        /* Header bar styles */
+        #besperChatHeader {
+            background-color: #022D54;
+            color: #FFFFFF;
+            padding: 12px 20px;
+            font-family: sans-serif;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        #besperChatContainer.open {
+            display: block;
+        }
+        /* Webchat container styles */
+        #besperWebchat {
+            width: 100%;
+            height: calc(100% - 44px); /* Adjust for header height */
+        }
+    </style>
+</head>
+<body>
+    <div id="besperChatWrapper">
+        <div id="besperChatBubble" title="Toggle Chat">Chat</div>
+        <div id="besperChatContainer">
+            <div id="besperChatHeader">Besper Bot</div>
+            <div id="besperWebchat"></div>
+        </div>
+    </div>
+    <!-- Load Web Chat and BesperJS scripts -->
+    <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
+    <script src="https://unpkg.com/besperjs@1.0.1/src/index.js"></script>
+    <script>
+        (function() {
+            // Key variables
+            const botId = 'Your Bot ID';
+            let webChatInitialized = false;
+            
+            document.addEventListener('DOMContentLoaded', () => {
+                const bubble = document.getElementById('besperChatBubble');
+                const container = document.getElementById('besperChatContainer');
+                
+                bubble.addEventListener('click', event => {
+                    event.stopPropagation();
+                    container.classList.toggle('open');
+                    // Only fetch session and initialize Web Chat if container is open
+                    if (container.classList.contains('open') && !webChatInitialized) {
+                        initializeWebChat();
+                    }
+                });
+                
+                // Close the chat if user clicks outside the chat bubble/container
+                document.addEventListener('click', event => {
+                    if (!event.target.closest('#besperChatWrapper')) {
+                        container.classList.remove('open');
+                    }
+                });
+            });
+            
+            async function initializeWebChat() {
+                try {
+                    // BesperJS session token request
+                    const token = await BesperBot.getSessionToken(botId, environment);
+                    // Azure Bot Framework Web Chat's DirectLine connection
+                    const directLine = window.WebChat.createDirectLine({ token });
+                    // Render the Web Chat window.
+                    window.WebChat.renderWebChat({
+                        directLine: directLine,
+                        userID: 'user1',
+                        username: 'Web Chat User',
+                        locale: 'en-US',
+                        /* Style Options for the Web Chat */
+                        styleOptions: {
+                            // Background color of the chat widget
+                            backgroundColor: '#FFFFFF',
+                            // Bot bubble styles
+                            bubbleBackground: '#F2F2F2',
+                            bubbleBorderColor: 'transparent',
+                            bubbleBorderRadius: 8,
+                            bubbleBorderStyle: 'solid',
+                            bubbleBorderWidth: 0,
+                            bubbleTextColor: '#000000',
+                            // User bubble styles
+                            bubbleFromUserBackground: '#5897DE',
+                            bubbleFromUserBorderColor: 'transparent',
+                            bubbleFromUserBorderStyle: 'solid',
+                            bubbleFromUserBorderWidth: 0,
+                            bubbleFromUserTextColor: '#FFFFFF',
+                            // Send box styles
+                            sendBoxBackground: '#FFFFFF',
+                            sendBoxButtonColor: '#022D54',
+                            sendBoxButtonHoverColor: '#5897DE',
+                            sendBoxHeight: 40,
+                            sendBoxTextColor: '#000000',
+                            // Suggested actions styles (e.g., quick replies)
+                            suggestedActionBackgroundColor: '#022D54',
+                            suggestedActionBorderColor: '#022D54',
+                            suggestedActionBorderRadius: 16,
+                            suggestedActionTextColor: '#FFFFFF',
+                            // Timestamps
+                            timestampColor: '#707070',
+                            // Disable attachments (if desired)
+                            attachmentsEnabled: false,
+                            // Padding options for different sections
+                            paddingOptions: {
+                                root: '0',
+                                chat: '0',
+                                bubble: '0',
+                                sendBox: '0'
+                            },
+                            // Avatar customization (bot and user)
+                            botAvatarInitials: 'B',
+                            botAvatarBackgroundColor: '#022D54',
+                            userAvatarInitials: 'U',
+                            userAvatarBackgroundColor: '#5897DE',
+                            avatarSize: 40,
+                            avatarBorderRadius: '50%'
+                        },
+                        // Middleware to handle activities (if needed for custom behavior)
+                        activityMiddleware: () => next => card => {
+                            return next(card);
+                        },
+                        // Toolbar configuration (no special actions here, so it's empty)
+                        toolbar: {
+                            actions: []
+                        }
+                    }, document.getElementById('besperWebchat'));
+                    webChatInitialized = true;
+                } catch (error) {
+                    console.error('Error initializing Web Chat:', error);
+                }
+            }
+        })();
+    </script>
+</body>
+</html>

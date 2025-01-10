@@ -1,44 +1,28 @@
 {
-    "name": "besperjs",
-    "version": "1.0.0",
-    "description": "A JavaScript library for interacting with Besper Bot.",
-    "main": "dist/index.js",
-    "module": "dist/index.mjs",
-    "browser": "dist/besperjs.min.js",
-    "files": [
-      "dist",
-      "src"
-    ],
-    "scripts": {
-      "build:dev": "NODE_ENV=development rollup -c",
-      "build:test": "NODE_ENV=test rollup -c",
-      "build:prod": "NODE_ENV=production rollup -c",
-      "build": "npm run build:dev && npm run build:test && npm run build:prod"
-    },
-    "keywords": [
-      "chatbot",
-      "besper",
-      "javascript-library",
-      "azure-bot"
-    ],
-    "author": "B-esper UG",
-    "license": "MIT",
-    "repository": {
-      "type": "git",
-      "url": "https://github.com/wsperger/BesperJS.git"
-    },
-    "bugs": {
-      "url": "https://github.com/wsperger/BesperJS/issues"
-    },
-    "homepage": "https://b-esper.com",
-    "dependencies": {
-      "cross-fetch": "^3.2.0"
-    },
-    "devDependencies": {
-      "@rollup/plugin-commonjs": "^28.0.2",
-      "@rollup/plugin-node-resolve": "^15.3.1",
-      "@rollup/plugin-terser": "^0.3.0",
-      "rollup": "^3.29.5"
-    }
-  }
-  
+  "name": "besperjs",
+  "version": "1.0.2",
+  "description": "A JavaScript library for interacting with Besper Bot.",
+  "main": "src/index.js",
+  "browser": "src/index.js",
+  "files": [
+    "src"
+  ],
+  "keywords": [
+    "chatbot",
+    "besper",
+    "javascript-library",
+    "azure-bot"
+  ],
+  "author": "B-esper UG",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wsperger/BesperJS.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wsperger/BesperJS/issues"
+  },
+  "homepage": "https://b-esper.com",
+  "dependencies": {},
+  "devDependencies": {}
+}

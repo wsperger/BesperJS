@@ -1,3 +1,5 @@
+// src/index.js
+
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD environment
@@ -20,23 +22,43 @@
     // Version of the library
     const VERSION = '1.0.0';
 
-    // API endpoint injected via environment variables
-    const API_ENDPOINT = process.env.API_ENDPOINT || 'https://b-esper-apim.azure-api.net/dev/sessions/initiate';
+    // Base API URL
+    const BASE_API_URL = 'https://b-esper-apim.azure-api.net';
+
+    /**
+     * Construct the API endpoint based on the environment parameter.
+     *
+     * @param {string} [environment] - Optional environment segment to include in the API URL.
+     * @returns {string} - The constructed API endpoint URL.
+     */
+    function constructApiEndpoint(environment) {
+      // Remove any leading or trailing slashes from the environment parameter
+      if (environment) {
+        environment = environment.replace(/^\/+|\/+$/g, '');
+        return `${BASE_API_URL}/${environment}/sessions/initiate`;
+      } else {
+        return `${BASE_API_URL}/sessions/initiate`;
+      }
+    }
 
     /**
      * Retrieve a session token for the specified bot ID using the API endpoint.
      *
      * @param {string} botId - The unique identifier for your Azure Bot.
+     * @param {string} [environment] - Optional environment to customize the API endpoint.
      * @returns {Promise<string>} - A promise that resolves to the session token.
      * @throws {Error} - Throws an error if the request fails or the response is invalid.
      */
-    async function getSessionToken(botId) {
+    async function getSessionToken(botId, environment) {
       if (!botId) {
         throw new Error('botId is required to retrieve a session token.');
       }
 
+      // Construct the API endpoint based on the environment parameter
+      const apiEndpoint = constructApiEndpoint(environment);
+
       try {
-        const response = await fetch(API_ENDPOINT, {
+        const response = await fetch(apiEndpoint, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -62,18 +84,15 @@
 
         return data.token;
       } catch (error) {
-        // Re-throw the error for the caller to handle
         throw new Error(`Error retrieving session token: ${error.message}`);
       }
     }
 
-    // Publicly exposed methods and properties
     return {
       getSessionToken,
       VERSION
     };
   })();
 
-  // Return the constructed object
   return BesperBot;
 }));
