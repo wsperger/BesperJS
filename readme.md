@@ -1,94 +1,102 @@
 
 # BesperJS
 
-**BesperJS** is the official JavaScript library by [Besper](https://github.com/yourorg). It provides tools to interact with B-Esper resources.
+BesperJS is a lightweight JavaScript library designed to interface with various **B-esper** resources. It provides a streamlined way to handle key operations—starting with generating secure session tokens. Over time, BesperJS will evolve to include more capabilities, making it a central hub for all B-esper integrations.
 
-> **Current Functionality**
-> 
-> - Retrieve a session token for the resource **BesperBot**.
-
+---
 ## Table of Contents
-
+- [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
-- [API](#api)
-- [get_session_token(botId)](#get_session_tokenbotid)
+- [Generating a Session Token](#generating-a-session-token)
+- [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [License](#license)
 
 ---
+## Features
+- **Session Token Generation**: Obtain a secure session token for further communication with B-esper services.
+- **Future Extensions**: The library will grow to include additional features for deeper integration with various B-esper platforms.
 
+---
 ## Installation
 
+You can include **BesperJS** in your project via a package manager or a CDN.
+
+### Via NPM
 ```bash
-# Using npm
 npm install besperjs
-
-# Using yarn
-yarn add besperjs
 ```
 
-Or simply include the UMD build in your HTML:
+Then import and start using it:
+```js
+import { BesperBot } from 'besperjs';
 
+(async () => {
+    const token = await BesperBot.getSessionToken('YOUR_BOT_ID');
+    console.log('Token:', token);
+})();
+```
+
+### Via CDN
 ```html
-<script src="besper.min.js"></script>
+<!-- Include BesperJS from a CDN (example using UNPKG) -->
+<script src="https://unpkg.com/besperjs@1.0.1/src/index.js"></script>
+<script>
+    // Once the script is loaded, you can use BesperBot
+    (async () => {
+        const token = await BesperBot.getSessionToken('YOUR_BOT_ID');
+        console.log('Token:', token);
+    })();
+</script>
 ```
-
-You can then access the global BesperBot object in the browser.
 
 ## Usage
 
-### 1. Importing/Require
+### Generating a Session Token
 
-If you’re using a module bundler (e.g., Webpack, Rollup, etc.) or a Node environment:
-
-```js
-// CommonJS
-const { get_session_token, VERSION } = require('besperjs');
-
-// ES Modules
-import { get_session_token, VERSION } from 'besperjs';
-```
-
-### 2. Retrieve a Session Token
+The primary function currently available in BesperJS is the ability to generate a secure session token. This token can be used with various B-esper services that require authenticated sessions.
 
 ```js
-(async function() {
-  try {
-    const botId = 'YOUR_BOT_ID';
-    const token = await get_session_token(botId);
-    console.log('Session Token:', token);
-  } catch (err) {
-    console.error('Error retrieving session token:', err);
-  }
-})();
-```
+// Example: Using ES Modules
+import { BesperBot } from 'besperjs';
 
-## API
-
-### get_session_token(botId)
-
-- **Parameters:**
-  - `botId` (string): Your unique Bot ID
-- **Returns:** Promise<string> - Resolves to the session token.
-
-**Example:**
-
-```js
 (async () => {
-  const token = await get_session_token('my-awesome-bot');
-  console.log(token);
+    try {
+        const token = await BesperBot.getSessionToken('YOUR_BOT_ID');
+        console.log('Successfully obtained token:', token);
+        // Use the token as needed
+    } catch (error) {
+        console.error('Error fetching token:', error);
+    }
 })();
 ```
+
+**Parameters**
+- `botId` (string): A unique identifier for your B-esper resource or environment.
+
+**Returns**
+- `Promise<string>`: A promise that resolves with the session token.
+
+## Roadmap
+
+BesperJS is intended to serve as a unified, overarching library for the entire B-esper ecosystem. Session token generation is just the beginning. Future plans include:
+- Advanced Authentication: Streamlined login flows, user management, and refresh token logic.
+- Data & Analytics: Enhanced methods for sending/receiving analytical data.
+- Configuration & Management: Tools to manage B-esper environment settings.
+- Plugin Support: Adaptable architecture to integrate custom plugins.
+
+Stay tuned for updates as the library evolves.
 
 ## Contributing
 
-1. Fork this repository
-2. Create your feature branch: `git checkout -b my-new-feature`
-3. Commit your changes: `git commit -am 'Add some feature'`
-4. Push to the branch: `git push origin my-new-feature`
-5. Submit a pull request
+We welcome contributions to make BesperJS more robust and versatile. To get started:
+1. Fork the repository
+2. Create a new branch for your feature/fix
+3. Submit a pull request describing your changes
+
+Please follow the Code of Conduct and ensure all tests pass before submitting a PR.
 
 ## License
 
-MIT
+This project is licensed under the MIT License. Feel free to use and modify the code in your own projects. We appreciate feedback and contributions!
